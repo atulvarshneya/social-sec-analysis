@@ -1,4 +1,6 @@
 from src.config import config
+from src.validators import validate_positive_number
+from src.logger import logger
 
 # Helper functions for income calculations, earnings test phases, and benefit lookups.
 
@@ -17,13 +19,30 @@ def year_income_summation(income_data: dict, year: int, start_month: int = 1, en
     
     Returns:
         Total income for the specified month range, or 0.0 if year not in data
+        
+    Raises:
+        ValueError: If month values are out of valid range
     """
+    # Validate month ranges
+    if start_month < 1 or start_month > 12:
+        raise ValueError(f"Invalid start_month: {start_month} (must be 1-12)")
+    
+    if end_month < 1 or end_month > 12:
+        raise ValueError(f"Invalid end_month: {end_month} (must be 1-12)")
+    
+    if start_month > end_month:
+        raise ValueError(f"Invalid month range: start_month ({start_month}) > end_month ({end_month})")
+    
     total_income = 0.0
     if year in income_data:
         for month in range(1, 13):
             if (month < start_month) or (month > end_month):
                 continue
-            total_income += income_data[year].get(month, 0.0)
+            amount = income_data[year].get(month, 0.0)
+            if amount < 0:
+                logger.warning(f"Negative income found for {year}-{month:02d}: {amount} (treating as 0)")
+                amount = 0.0
+            total_income += amount
     return total_income
 
 
@@ -42,7 +61,17 @@ def identify_phase(current_year: int, current_month: int, birth_year: int, birth
     
     Returns:
         Phase string: 'age_before_nra', 'age_nra_year', or 'age_after_nra'
+        
+    Raises:
+        ValueError: If month values are out of valid range
     """
+    # Validate month ranges
+    if current_month < 1 or current_month > 12:
+        raise ValueError(f"Invalid current_month: {current_month} (must be 1-12)")
+    
+    if birth_month < 1 or birth_month > 12:
+        raise ValueError(f"Invalid birth_month: {birth_month} (must be 1-12)")
+    
     nra_year = birth_year + config.NRA_AGE
     nra_month = birth_month
 
@@ -73,7 +102,17 @@ def lookup_benefit(benefits_data: dict, start_year: int, start_month: int, birth
     
     Returns:
         Monthly benefit amount (PIA) for the given age, or 0.0 if not found
+        
+    Raises:
+        ValueError: If month values are out of valid range or benefit not found
     """
+    # Validate month ranges
+    if start_month < 1 or start_month > 12:
+        raise ValueError(f"Invalid start_month: {start_month} (must be 1-12)")
+    
+    if birth_month < 1 or birth_month > 12:
+        raise ValueError(f"Invalid birth_month: {birth_month} (must be 1-12)")
+    
     # Calculate age in years and months at retirement
     age_years = start_year - birth_year
     if start_month < birth_month:  # SSA hasn't counted the birth month yet this year
@@ -90,5 +129,10 @@ def lookup_benefit(benefits_data: dict, start_year: int, start_month: int, birth
     age_str = f"{age_years}-{age_months:02d}"
 
     # Look up benefit amount for this age
-    benefit = benefits_data.get(age_str, 0.0)
+    if age_str not in benefits_data:
+        logger.warning(f"Benefit not found for age {age_str} (retirement {start_year}-{start_month:02d}, birth {birth_year}-{birth_month:02d}), returning 0.0")
+        benefit = 0.0
+    else:
+        benefit = benefits_data[age_str]
+    
     return benefit
