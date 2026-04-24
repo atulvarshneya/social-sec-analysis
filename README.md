@@ -1,46 +1,71 @@
 ## Disclaimer
 
-This tool can have errors. It is based on my understanding of how the SoSec benefits work. Please use it with this understanding, and with caution.
+This software is provided 'as is', without any warranty of any kind, express or implied. The author(s) will not be held liable for any damages arising from the use of this software.
 
 # Social Security Benefits Analysis Tool
 
-This tool helps you analyze how your benefits will pan out depending on when you start considering reductions if you have some wages after you start. 
+This tool helps you analyze your Social Security benefits trajectory based on your claiming age, accounting for benefit reductions due to continued earned income after enrollment. 
 
-The SoSec benefit amount is based on your contributions for the duration you worked (i.e., paid SoSec taxes), and are fixed for life depending on the age at which you enroll to start receiving benefits. Every year SSA decides a Cost of Living Adjustment (COLA) factor which is multiplied to your fixed benefit amount to compensate for the inflation etc.
+## How Social Security Benefits Work
 
-If you continue to earn wages after you enroll to start SoSec benefits, then the SoSec benefits can be reduced depending on the phase (before reaching FRA, during the calendar year of reaching FRA, after FRA) and corresponding maximum income limit announced by SSA every year. Once you have reached FRA, there is no reduction to benefits.
+Your Social Security benefit amount is determined by your lifetime contributions (Social Security taxes paid) and your age when you begin receiving benefits. This benefit amount is fixed for life, subject to annual Cost of Living Adjustments (COLA). Each year, the Social Security Administration applies a COLA factor to your benefit to account for inflation.
 
-Note, if due to wages, your SoSec benefits are eliminated for certain months, then, on the month you turn 67 (FRA), the SoSec benefit is recalculated as if you started that many months later.
+If you continue earning wages after claiming Social Security benefits, your benefits may be reduced based on your earnings and the applicable income limits:
+- **Before Full Retirement Age (FRA)**: $1 benefit reduction for every $2 earned above the annual limit
+- **Year you reach FRA**: $1 benefit reduction for every $3 earned above the limit (only for earnings before reaching FRA)
+- **After reaching FRA**: No reduction regardless of earnings
 
-This tool does the following
-* looks up (and interpolates, if necessary) the benefit amount per your SSA SoSec statement per the date you enroll to start receiving SoSec benefits
-* computes the reduction in the SoSec benefits based on your wages and max income limit for each year and depending on your phase
-* recalculates the benefit number once you reach FRA, based on the number of onths your benefits were eliminated due to your wages
-* it **DOES NOT** take into account the COLA adjustments to the SoSec benefits
-* creates an MS Excel file `output/combined_scenario_benefits.xlsx` which has sheets with a summarized comparison sheet, and sheets with the information for all the scenarios
+When benefits are eliminated due to excess earnings during certain months, your benefit is recalculated at FRA as if you had started claiming at a later date.
 
-The output MS Excel file has the first sheet where all scenarios monthly calculated (with reduction) benefits, and running cumulative numbers are provided. And, for each scenario specified, it has one sheet that provides monthly details and another sheet for annual details.
+## Features
 
-# To run it, you need to prepare the following files
-* **data/benefits_by_age.json** - in this file you need to provide the benefits data you get from SSA. Provided below is a sample content:
+This tool performs the following calculations and analyses:
+
+1. **Benefit Lookup**: Retrieves your monthly Social Security benefit amount based on your claiming age (with interpolation if necessary)
+2. **Earnings Reduction Calculation**: Computes benefit reductions based on your annual wages, applicable income limits, and benefit phase
+3. **FRA Recalculation**: Recalculates your benefit at Full Retirement Age to account for months when benefits were eliminated due to excess earnings
+4. **Scenario Analysis**: Generates detailed comparison across multiple scenarios
+5. **Excel Report**: Creates a comprehensive `output/combined_scenario_benefits.xlsx` with:
+   - Summary comparison sheet across all scenarios
+   - Monthly details for each scenario (including earnings reductions and cumulative totals)
+   - Annual summary for each scenario
+
+**Note**: This tool does not currently apply COLA adjustments to benefit projections.
+
+# Setup Requirements
+
+Before running the tool, you must prepare the following input files in the `data/` directory:
+
+## 1. data/benefits_by_age.json
+
+This file contains your monthly Social Security benefit amounts at different claiming ages from your Social Security Administration statement.
+
+**Example:**
 ```json
 {
-  "description": "Monthly eligible Social Security benefits by age at which benefits are claimed",
-  "notes": "Here we have some placeholder values, put your actual values from SSA statement. Include age yy-mm values from now till 70",
+  "description": "Monthly Social Security benefits by claiming age",
+  "notes": "Replace placeholder values with amounts from your SSA statement. Include age values (years and months) from current age through age 70",
   "normal_retirement_age": 67,
   "max_retirement_age": 70,
   "benefits": [
     {"age": "64-7", "benefit": 2000.00},
     {"age": "65", "benefit": 2100.00},
     {"age": "66", "benefit": 2200.00},
-    {"age": "67","benefit": 2300.00},
+    {"age": "67", "benefit": 2300.00},
     {"age": "68", "benefit": 2400.00},
     {"age": "69", "benefit": 2500.00},
-     {"age": "70", "benefit": 2600.00}
+    {"age": "70", "benefit": 2600.00}
   ]
 }
 ```
-* **data/earnings_limits.json** - in this file you need to provide the annual wages limits as provided by SSA. The limits entries (`annual_limit`, and `reduction_factor`) are required for all years till you turn 67. Unfortunately, SSA does not provide these for future years, so you will need to estimate them.  Provided below is a sample content:
+
+## 2. data/earnings_limits.json
+
+This file contains the annual earnings limits and reduction factors for each year from now until you reach Full Retirement Age (age 67).
+
+**Important**: The Social Security Administration only publishes these limits through the current year. You must estimate values for future years based on historical trends.
+
+**Example:**
 
 ```json
 {
@@ -72,7 +97,12 @@ The output MS Excel file has the first sheet where all scenarios monthly calcula
   ]
 }
 ```
-* **data/income_data.csv** - this CSV file is required to provide the monthly wages expected till you plan to earn wages during your retirement. Provide entries only for the months you expect to earn. Provided below is a sample content:
+
+## 3. data/income_data.csv
+
+This file contains your monthly earned income during retirement. Include entries only for months when you expect to have earnings.
+
+**Example:**
 ```csv
 year,month,amount
 2026,1,30000.00
@@ -89,7 +119,12 @@ year,month,amount
 2026,12,30000.00
 2027,1,30000.00
 ```
-* **data/scenario_data.json** - this is where you sepcify all the scenarios you want evaluated for analysis. Provided below is a sample content with two scenarios specified - you can have any number of scenarios:
+
+## 4. data/scenario_data.json
+
+This file defines the scenarios you want analyzed. Each scenario specifies a benefits start date and analysis end date. You can create any number of scenarios for comparison.
+
+**Example:**
 ```json
 {
     "description": "Scenario data for social security benefits calculation.",
@@ -109,9 +144,13 @@ year,month,amount
 }
 ```
 
-# Running the tool
-Having prepared the files, run the tool with the following command:
+# Running the Tool
+
+After preparing all required input files, execute the tool with the following command:
+
 ```bash
 python -m src.main
 ```
+
+The tool will generate a comprehensive analysis report as `output/combined_scenario_benefits.xlsx`.
 
