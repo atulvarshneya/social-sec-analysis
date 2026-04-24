@@ -1,0 +1,15 @@
+{
+  "description": "Monthly eligible Social Security benefits by age at which benefits are claimed",
+  "notes": "Here we have some placeholder values, put your actual values from SSA statement. Include age yy-mm values from now till 70",
+  "normal_retirement_age": 67,
+  "max_retirement_age": 70,
+  "benefits": [
+    {"age": "64-7", "benefit": 2000.00},
+    {"age": "65", "benefit": 2100.00},
+    {"age": "66", "benefit": 2200.00},
+    {"age": "67","benefit": 2300.00},
+    {"age": "68", "benefit": 2400.00},
+    {"age": "69", "benefit": 2500.00},
+     {"age": "70", "benefit": 2600.00}
+  ]
+}

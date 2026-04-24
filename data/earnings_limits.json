@@ -1,0 +1,48 @@
+{
+  "description": "Annual earning limits and reduction factors for Social Security earnings test. Must go from current year to year you turn 67 (NRA).",
+  "notes": "Reduction factor is the divisor: $1 reduction per $2 earned = 2, $1 reduction per $3 earned = 3",
+  "rules": [
+    {
+      "year": 2026,
+      "age_before_nra": {
+        "annual_limit": 24480,
+        "reduction_factor": 2,
+        "description": "$1 benefit reduction for every $2 in earnings above limit"
+      },
+      "age_nra_year": {
+        "annual_limit": 65160,
+        "reduction_factor": 3,
+        "months_counted": "only months before reaching NRA",
+        "description": "$1 benefit reduction for every $3 in earnings above limit, applies Jan 1 to month before NRA"
+      }
+    },
+    {
+      "year": 2027,
+      "age_before_nra": {
+        "annual_limit": 24960,
+        "reduction_factor": 2,
+        "description": "$1 benefit reduction for every $2 in earnings above limit"
+      },
+      "age_nra_year": {
+        "annual_limit": 66600,
+        "reduction_factor": 3,
+        "months_counted": "only months before reaching NRA",
+        "description": "$1 benefit reduction for every $3 in earnings above limit, applies Jan 1 to month before NRA"
+      }
+    },
+    {
+      "year": 2028,
+      "age_before_nra": {
+        "annual_limit": 24960,
+        "reduction_factor": 2,
+        "description": "$1 benefit reduction for every $2 in earnings above limit"
+      },
+      "age_nra_year": {
+        "annual_limit": 66600,
+        "reduction_factor": 3,
+        "months_counted": "only months before reaching NRA",
+        "description": "$1 benefit reduction for every $3 in earnings above limit, applies Jan 1 to month before NRA"
+      }
+    }
+  ]
+}

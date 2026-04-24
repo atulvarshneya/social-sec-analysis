@@ -1,0 +1,31 @@
+{
+    "description": "Scenario data for social security benefits calculation, all till age of 85 (2046-09-23).",
+    "birthdate": "1961-06-01",
+    "scenarios": [
+        {
+        "scenario_name": "Start 2026-06",
+        "start_date": "2026-06-01",
+        "end_date": "2046-06-01"
+        },
+        {
+        "scenario_name": "Start 2026-09",
+        "start_date": "2026-09-01",
+        "end_date": "2046-06-01"
+        },
+        {
+        "scenario_name": "Start 2027-01",
+        "start_date": "2027-01-01",
+        "end_date": "2046-06-01"
+        },
+        {
+        "scenario_name": "Start 2027-03",
+        "start_date": "2027-03-01",
+        "end_date": "2046-06-01"
+        },
+        {
+        "scenario_name": "Start 2027-06",
+        "start_date": "2027-06-01",
+        "end_date": "2046-06-01"
+        }
+    ]
+}
