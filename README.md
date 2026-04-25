@@ -32,6 +32,15 @@ This tool performs the following calculations and analyses:
 
 **Note**: This tool does not currently apply COLA adjustments to benefit projections.
 
+# Installation
+
+This tool is written in Python. It has been tested on Python 3.11. You will need to install this version of Python if not already installed.
+
+to install this tool -
+1. download this repository in a folder,
+2. cd into that folder and install dependencies by running the following command  
+    `pip install -r requirements.txt`
+
 # Setup Requirements
 
 Before running the tool, you must prepare the following input files in the `data/` directory:
@@ -153,4 +162,3 @@ python -m src.main
 ```
 
 The tool will generate a comprehensive analysis report as `output/combined_scenario_benefits.xlsx`.
-
