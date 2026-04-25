@@ -3,27 +3,27 @@
     "birthdate": "1961-06-01",
     "scenarios": [
         {
-        "scenario_name": "Start 2026-06",
+        "scenario_name": "Base Case",
         "start_date": "2026-06-01",
         "end_date": "2046-06-01"
         },
         {
-        "scenario_name": "Start 2026-09",
+        "scenario_name": "Scenario 2",
         "start_date": "2026-09-01",
         "end_date": "2046-06-01"
         },
         {
-        "scenario_name": "Start 2027-01",
+        "scenario_name": "Scenario 3",
         "start_date": "2027-01-01",
         "end_date": "2046-06-01"
         },
         {
-        "scenario_name": "Start 2027-03",
+        "scenario_name": "Scenario 4",
         "start_date": "2027-03-01",
         "end_date": "2046-06-01"
         },
         {
-        "scenario_name": "Start 2027-06",
+        "scenario_name": "Scenario 5",
         "start_date": "2027-06-01",
         "end_date": "2046-06-01"
         }
